@@ -32,6 +32,9 @@ export default function Home() {
   const moveToSelectedBox = () => {
     console.log('test');
     setSelectedCandidateList(tempItems);
+    console.log(tempItems);
+    
+    // setAvailableCondidateList();
     // settempItems([]);
   }
 
