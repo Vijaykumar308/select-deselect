@@ -1,56 +1,49 @@
 'use client';
 
-import {useState } from "react";
+export default function Items({ data, setAvailableCondidateList, selectedItemsList, setSelectedItemsList }) {
 
-export default function Items({ data, setAvailableCondidateList, settempItems }) {
-    const [selectedIndex, setSelectedIndex] = useState([]);
-
-    const handleRemove = (value) => {
-        const filteredRecord = data.filter((items) => items !== value);
+    const handleRemove = (item) => {
+        const filteredRecord = data.filter((d) => d.id !== item.id);
         setAvailableCondidateList(filteredRecord);
     }
 
-    const handleItemSelect = (val,index) => {
-        if(selectedIndex.includes(index)) {
-            setSelectedIndex(selectedIndex.filter(i => i !== index));
-        }
-        else {
-            setSelectedIndex(prev => [index, ...prev]);
-            settempItems(preval => [val, ...preval]);
+    const handleItemSelect = (selectedItem) => {
+        if (selectedItemsList?.includes(selectedItem.id)) { 
+            setSelectedItemsList(prev => [selectedItemsList.filter(id => id !== selectedItem.id), ...prev]);
+        } else {
+            setSelectedItemsList(prev => [selectedItem.id, ...prev]);
         }
     }
+    console.log(selectedItemsList);
 
     return (
         <ul className="space-y-2">
-            {
-                data?.map((value, index) => {
-                    return (
-                        <li
-                            key={crypto.randomUUID()}
-                            className={`
-                                ${selectedIndex.includes(index) ? 'bg-emerald-400' : 'bg-emerald-100 hover:bg-emerald-200'}
-                                text-black px-4 py-2 rounded cursor-pointer transition duration-200 
-                                flex justify-between items-center
-                            `}
-                            onClick={() => handleItemSelect(value, index)}
-                        >
-                            
-                            <span className="capitalize">{value}</span>
+            {data?.map((item) => {
+                return (
+                    <li
+                        key={item.id} // Use item.id for the key to avoid duplicate warnings
+                        className={`
+                            ${selectedItemsList?.includes(item.id) ? 'bg-emerald-400' : 'bg-emerald-100 hover:bg-emerald-200'} 
+                            text-black px-4 py-2 rounded cursor-pointer transition duration-200 
+                            flex justify-between items-center
+                        `}
+                        onClick={() => handleItemSelect(item)}
+                    >
+                        <span className="capitalize">{item.text}</span>
 
-                            <span
-                                className="text-red-500 hover:text-red-700 font-bold text-lg ml-4 cursor-pointer"
-                                title="Remove"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemove(value)
-                                }}
-                            >
-                                ×
-                            </span>
-                        </li>
-                    )
-                })
-            }
+                        <span
+                            className="text-red-500 hover:text-red-700 font-bold text-lg ml-4 cursor-pointer"
+                            title="Remove"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemove(item)
+                            }}
+                        >
+                            ×
+                        </span>
+                    </li>
+                )
+            })}
         </ul>
     );
 }

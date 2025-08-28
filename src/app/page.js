@@ -8,8 +8,7 @@ import { useState } from "react";
 export default function Home() {
   const [candidateName, setCandidateName] = useState('');
   const [availableCondidateList, setAvailableCondidateList] = useState([]);
-
-  const [tempItems, settempItems] = useState([]);
+  const [selectedItemsList, setSelectedItemsList] = useState([]);
 
   const [selectedCandidateList, setSelectedCandidateList] = useState([]);
 
@@ -25,18 +24,49 @@ export default function Home() {
   }
 
   const handleSaveInput = () => {
-    setAvailableCondidateList(prev => [candidateName, ...prev]);
+    const obj = {
+      id: crypto.randomUUID(),
+      text:'',
+      inAvailBox: true
+    }
+    obj.text = candidateName;
+
+    setAvailableCondidateList(prev => [obj, ...prev]);
     setCandidateName('');
   }
 
-  const moveToSelectedBox = () => {
-    console.log('test');
-    setSelectedCandidateList(tempItems);
-    console.log(tempItems);
+  // console.log(availableCondidateList);
+
+ // Move items from the left list to the right list
+const moveToSelectedBox = () => {
+    // Get items that are selected (from available list)
+    const selectedItems = availableCondidateList.filter(item => selectedItemsList.includes(item.id));
     
-    // setAvailableCondidateList();
-    // settempItems([]);
-  }
+    // Remove selected items from the available list
+    const nonSelectedItems = availableCondidateList.filter(item => !selectedItemsList.includes(item.id));
+
+    // Update availableCondidateList
+    setAvailableCondidateList(nonSelectedItems);
+    
+    // Add selected items to the selectedCandidateList
+    setSelectedCandidateList(prev => [...selectedItems, ...prev]);
+}
+
+ 
+// Move items back from the right list to the left list
+const moveToAvailableBox = () => {
+    // Get items that are selected (from the selected list)
+    const selectedItems = selectedCandidateList.filter(item => selectedItemsList.includes(item.id));
+    
+    // Remove selected items from the selected list
+    const nonSelectedItems = selectedCandidateList.filter(item => !selectedItemsList.includes(item.id));
+
+    // Update selectedCandidateList
+    setSelectedCandidateList(nonSelectedItems);
+    
+    // Add selected items back to the availableCondidateList
+    setAvailableCondidateList(prev => [...selectedItems, ...prev]);
+}
 
   return (
     <div className="app max-w-5xl mx-auto min-h-screen bg-gradient-to-br from-cyan-700 to-emerald-700 p-10 text-white font-sans">
@@ -70,13 +100,18 @@ export default function Home() {
         {/* Left List */}
         <div className="w-1/3 bg-white rounded shadow-lg p-5 text-black">
           <h2 className="text-center font-semibold text-lg mb-4">Available Candidates</h2>
-          <Items data={availableCondidateList} setAvailableCondidateList={setAvailableCondidateList} settempItems={settempItems}/>
+          <Items 
+            data={availableCondidateList} 
+            setAvailableCondidateList={setAvailableCondidateList} 
+            selectedItemsList={selectedItemsList} 
+            setSelectedItemsList={setSelectedItemsList} 
+          />
         </div>
 
         {/* Action buttons */}
         <div className="flex flex-col justify-center items-center space-y-4">
           <Button value=">" onClick={moveToSelectedBox} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded text-white text-lg" />
-          <Button value="<" className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded text-white text-lg" />
+          <Button value="<" onClick={moveToAvailableBox} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded text-white text-lg" />
         </div>
 
         {/* Right List */}
