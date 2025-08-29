@@ -1,11 +1,17 @@
 'use client';
 
-export default function Items({ data, setAvailableCondidateList, selectedItemsList, setSelectedItemsList }) {
+function Items({ data, setAvailableCondidateList, selectedItemsList, setSelectedItemsList, setSelectedCandidateList = () => {}, }) {
 
     const handleRemove = (item) => {
-        const filteredRecord = data.filter((d) => d.id !== item.id);
+    const filteredRecord = data.filter((d) => d.id !== item.id);
+
+    // Smart removal from correct list
+    if (setAvailableCondidateList) {
         setAvailableCondidateList(filteredRecord);
+    } else if (setSelectedCandidateList) {
+        setSelectedCandidateList(filteredRecord);
     }
+}
 
     const handleItemSelect = (selectedItem) => {
         if (selectedItemsList?.includes(selectedItem.id)) { 
@@ -14,7 +20,6 @@ export default function Items({ data, setAvailableCondidateList, selectedItemsLi
             setSelectedItemsList(prev => [selectedItem.id, ...prev]);
         }
     }
-    console.log(selectedItemsList);
 
     return (
         <ul className="space-y-2">
@@ -22,11 +27,11 @@ export default function Items({ data, setAvailableCondidateList, selectedItemsLi
                 return (
                     <li
                         key={item.id} // Use item.id for the key to avoid duplicate warnings
-                        className={`
-                            ${selectedItemsList?.includes(item.id) ? 'bg-emerald-400' : 'bg-emerald-100 hover:bg-emerald-200'} 
-                            text-black px-4 py-2 rounded cursor-pointer transition duration-200 
-                            flex justify-between items-center
-                        `}
+                        className={
+                                `${selectedItemsList?.includes(item.id) ? 'bg-emerald-400' : 'bg-emerald-100 hover:bg-emerald-200'} 
+                                text-black px-4 py-2 rounded cursor-pointer transition-all duration-300 ease-in-out
+                                flex justify-between items-center`
+                            }
                         onClick={() => handleItemSelect(item)}
                     >
                         <span className="capitalize">{item.text}</span>
@@ -47,3 +52,5 @@ export default function Items({ data, setAvailableCondidateList, selectedItemsLi
         </ul>
     );
 }
+
+export default Items;

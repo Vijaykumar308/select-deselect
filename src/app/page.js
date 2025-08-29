@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Items from "@/components/Items";
 import { useState } from "react";
+      import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/solid';
 
 export default function Home() {
   const [candidateName, setCandidateName] = useState('');
@@ -50,6 +51,7 @@ const moveToSelectedBox = () => {
     
     // Add selected items to the selectedCandidateList
     setSelectedCandidateList(prev => [...selectedItems, ...prev]);
+    setSelectedItemsList([]);
 }
 
  
@@ -66,10 +68,12 @@ const moveToAvailableBox = () => {
     
     // Add selected items back to the availableCondidateList
     setAvailableCondidateList(prev => [...selectedItems, ...prev]);
+
+     setSelectedItemsList([]);
 }
 
   return (
-    <div className="app max-w-5xl mx-auto min-h-screen bg-gradient-to-br from-cyan-700 to-emerald-700 p-10 text-white font-sans">
+    <div className="app min-h-screen bg-gradient-to-br from-cyan-700 to-emerald-700 p-10 text-white font-sans">
       {/* Header */}
       <div className="mb-10 text-center">
         <h1 className="text-4xl font-bold">Candidate Selector</h1>
@@ -98,7 +102,8 @@ const moveToAvailableBox = () => {
       {/* Main content */}
       <main className="flex justify-center items-center space-x-10">
         {/* Left List */}
-        <div className="w-1/3 bg-white rounded shadow-lg p-5 text-black">
+       <div className="w-1/3 min-h-[400px] flex flex-col bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl p-5 text-white">
+
           <h2 className="text-center font-semibold text-lg mb-4">Available Candidates</h2>
           <Items 
             data={availableCondidateList} 
@@ -109,15 +114,36 @@ const moveToAvailableBox = () => {
         </div>
 
         {/* Action buttons */}
-        <div className="flex flex-col justify-center items-center space-y-4">
-          <Button value=">" onClick={moveToSelectedBox} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded text-white text-lg" />
-          <Button value="<" onClick={moveToAvailableBox} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded text-white text-lg" />
-        </div>
+
+
+<div className="flex flex-col justify-center items-center space-y-4">
+  <button 
+    onClick={moveToSelectedBox}
+    className="p-3 bg-blue-500 hover:bg-blue-600 rounded-full text-white shadow-lg"
+    title="Move to Selected"
+  >
+    <ChevronRightIcon className="w-6 h-6" />
+  </button>
+
+  <button 
+    onClick={moveToAvailableBox}
+    className="p-3 bg-blue-500 hover:bg-blue-600 rounded-full text-white shadow-lg"
+    title="Move to Available"
+  >
+    <ChevronLeftIcon className="w-6 h-6" />
+  </button>
+</div>
+
 
         {/* Right List */}
-        <div className="w-1/3 bg-white rounded shadow-lg p-5 text-black">
+        <div className="w-1/3 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl p-5 text-white">
+
           <h2 className="text-center font-semibold text-lg mb-4">Selected Candidates</h2>
-          <Items data={selectedCandidateList}/>
+          <Items  data={selectedCandidateList}
+            setSelectedCandidateList={setSelectedCandidateList} 
+            selectedItemsList={selectedItemsList} 
+            setSelectedItemsList={setSelectedItemsList} 
+          />
         </div>
       </main>
     </div>
