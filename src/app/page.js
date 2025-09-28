@@ -136,7 +136,7 @@ const moveToAvailableBox = () => {
 
 
         {/* Right List */}
-        <div className="w-1/3 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl p-5 text-white">
+        <div className="w-1/3 min-h-[400px] flex flex-col bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl p-5 text-white">
 
           <h2 className="text-center font-semibold text-lg mb-4">Selected Candidates</h2>
           <Items  data={selectedCandidateList}
