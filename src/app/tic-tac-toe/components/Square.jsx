@@ -1,26 +1,25 @@
 'use client';
 
-import { useState } from "react";
-
-const Square = ({index}) => {
-    const [state, setState] = useState(Array(9).fill(null));
-    const [isXTurn, setIsXTurn] = useState(true);
-
-    
-    const handleClicked = (id) => {
-        const symbole = "X";
-        console.log('clicked in func: '+id);
-        const copyState = [...state];
-        copyState[id] = symbole;
-        console.log(copyState);
-        setState([...copyState]);
-    }
-
-    return <>
-        <div className="square border-2 w-80 h-20 flex justify-center items-center" onClick={() => handleClicked(index)}>
-          {state[index]}
-        </div>
-    </>
-}
+const Square = ({ handleClicked, value }) => {
+    return (
+        <button
+            onClick={handleClicked}
+            className={`
+                w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32
+                text-4xl font-bold rounded-lg
+                transition-all duration-200 ease-in-out
+                ${value === 'X' ? 'text-blue-600' : 'text-red-600'}
+                ${!value ? 'hover:bg-gray-100 active:bg-gray-200' : 'cursor-default'}
+                border-2 border-gray-300 shadow-md
+                flex items-center justify-center
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+            `}
+            disabled={!!value}
+            aria-label={value ? `${value} is placed` : 'Empty square'}
+        >
+            {value}
+        </button>
+    );
+};
 
 export default Square;
